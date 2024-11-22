@@ -7,10 +7,35 @@ type FormValues = {
   username: string;
   email: string;
   channel: string;
+  social: {
+    twitter: string;
+    facebook: string;
+  };
 };
 
 export default function YouTubeForm() {
-  const formDeal = useForm<FormValues>();
+  const formDeal = useForm<FormValues>({
+    defaultValues: async () => {
+      const response = await fetch(
+        'https://jsonplaceholder.typicode.com/users/1'
+      );
+      const data = await response.json();
+      return {
+        username: 'Ruby',
+        email: data.email,
+        channel: '',
+        social: {
+          twitter: '',
+          facebook: '',
+        },
+      };
+    },
+    // defaultValues: {
+    //   username: 'Ruby',
+    //   email: '',
+    //   channel: '',
+    // },
+  });
   const { register, control, handleSubmit, formState } = formDeal;
   const { errors } = formState;
 
@@ -84,6 +109,14 @@ export default function YouTubeForm() {
             })}
           />
           <p className="error">{errors.channel?.message}</p>
+        </div>
+        <div className="form-control">
+          <label htmlFor="twitter">Twitter</label>
+          <input type="text" id="twitter" {...register('social.twitter')} />
+        </div>
+        <div className="form-control">
+          <label htmlFor="facebook">Facebook</label>
+          <input type="text" id="facebook" {...register('social.facebook')} />
         </div>
 
         <button>Submit</button>
