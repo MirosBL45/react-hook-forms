@@ -15,6 +15,8 @@ type FormValues = {
   phNumbers: {
     number: string;
   }[];
+  age: number;
+  dob: Date;
 };
 
 export default function YouTubeForm() {
@@ -34,14 +36,12 @@ export default function YouTubeForm() {
         },
         phoneNumbers: ['', ''],
         phNumbers: [{ number: '' }],
+        age: 0,
+        dob: new Date(),
       };
     },
-    // defaultValues: {
-    //   username: 'Ruby',
-    //   email: '',
-    //   channel: '',
-    // },
   });
+
   const { register, control, handleSubmit, formState } = formDeal;
 
   const { errors } = formState;
@@ -155,7 +155,7 @@ export default function YouTubeForm() {
         </div>
 
         <div>
-          <label htmlFor="">List of phone numbers</label>
+          <label>List of phone numbers</label>
           <div>
             {fields.map((field, index) => (
               <div className="form-control" key={field.id}>
@@ -174,6 +174,38 @@ export default function YouTubeForm() {
               Add phone number
             </button>
           </div>
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="age">Age</label>
+          <input
+            type="number"
+            id="age"
+            {...register('age', {
+              valueAsNumber: true,
+              required: {
+                value: true,
+                message: 'age is required',
+              },
+            })}
+          />
+          <p className="error">{errors.age?.message}</p>
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="dob">Date of birth</label>
+          <input
+            type="date"
+            id="dob"
+            {...register('dob', {
+              valueAsDate: true,
+              required: {
+                value: true,
+                message: 'dob is required',
+              },
+            })}
+          />
+          <p className="error">{errors.dob?.message}</p>
         </div>
 
         <button>Submit</button>
