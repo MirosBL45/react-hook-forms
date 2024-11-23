@@ -54,7 +54,12 @@ export default function YouTubeForm() {
     setValue,
   } = formDeal;
 
-  const { errors, isSubmitting } = formState;
+  const { errors, isSubmitting, touchedFields, dirtyFields, isDirty } =
+    formState;
+
+  console.log(touchedFields, dirtyFields, isDirty);
+
+  // isDirty helps to see is form full. fe: button can be disabled when form is not full
 
   const { fields, append, remove } = useFieldArray({
     name: 'phNumbers',
@@ -166,7 +171,14 @@ export default function YouTubeForm() {
         </div>
         <div className="form-control">
           <label htmlFor="twitter">Twitter</label>
-          <input type="text" id="twitter" {...register('social.twitter')} />
+          <input
+            type="text"
+            id="twitter"
+            {...register('social.twitter', {
+              disabled: watch('channel') === '',
+              required: 'Enter twitter profile',
+            })}
+          />
         </div>
         <div className="form-control">
           <label htmlFor="facebook">Facebook</label>
