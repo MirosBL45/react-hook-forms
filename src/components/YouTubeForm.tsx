@@ -1,5 +1,6 @@
 import { useForm, useFieldArray } from 'react-hook-form';
 import { DevTool } from '@hookform/devtools';
+// import { useEffect } from 'react';
 
 let renderCount = 0;
 
@@ -42,7 +43,16 @@ export default function YouTubeForm() {
     },
   });
 
-  const { register, control, handleSubmit, formState, setError } = formDeal;
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState,
+    setError,
+    watch,
+    getValues,
+    setValue,
+  } = formDeal;
 
   const { errors, isSubmitting } = formState;
 
@@ -64,11 +74,34 @@ export default function YouTubeForm() {
     }
   }
 
+  function handleGetValues() {
+    console.log('Get values: ', getValues('social'));
+  }
+
+  function handleSetValue() {
+    setValue('username', 'Ruby is nice cat', {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    });
+  }
+
+  // useEffect(() => {
+  //   const subscription = watch((value) => {
+  //     console.log(value);
+  //   });
+
+  //   return () => subscription.unsubscribe();
+  // }, [watch]);
+
+  const watchUserName = watch('username');
+
   renderCount++;
 
   return (
     <div>
       <h1>YouTube Form {renderCount / 2}</h1>
+      <h2>Watched value: {watchUserName}</h2>
 
       <form onSubmit={handleSubmit(onSubmitFun)}>
         <div className="form-control">
@@ -218,6 +251,14 @@ export default function YouTubeForm() {
 
         <button disabled={isSubmitting}>
           {isSubmitting ? 'Loading' : 'Submit'}
+        </button>
+
+        <button type="button" onClick={handleGetValues}>
+          Get Values
+        </button>
+
+        <button type="button" onClick={handleSetValue}>
+          Set Value
         </button>
       </form>
       <DevTool control={control} />
