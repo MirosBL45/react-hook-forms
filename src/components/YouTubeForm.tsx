@@ -42,18 +42,26 @@ export default function YouTubeForm() {
     },
   });
 
-  const { register, control, handleSubmit, formState } = formDeal;
+  const { register, control, handleSubmit, formState, setError } = formDeal;
 
-  const { errors } = formState;
+  const { errors, isSubmitting } = formState;
 
   const { fields, append, remove } = useFieldArray({
     name: 'phNumbers',
     control,
   });
 
-  function onSubmitFun(data: FormValues) {
-    console.log('Form submitted', data);
-    formDeal.reset();
+  async function onSubmitFun(data: FormValues) {
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      // throw new Error();
+      console.log('Form submitted', data);
+      formDeal.reset();
+    } catch (error) {
+      setError('age', {
+        message: 'Age is not god',
+      });
+    }
   }
 
   renderCount++;
@@ -208,7 +216,9 @@ export default function YouTubeForm() {
           <p className="error">{errors.dob?.message}</p>
         </div>
 
-        <button>Submit</button>
+        <button disabled={isSubmitting}>
+          {isSubmitting ? 'Loading' : 'Submit'}
+        </button>
       </form>
       <DevTool control={control} />
     </div>
