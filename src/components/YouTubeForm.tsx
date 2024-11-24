@@ -1,4 +1,4 @@
-import { useForm, useFieldArray } from 'react-hook-form';
+import { useForm, useFieldArray, FieldErrors } from 'react-hook-form';
 import { DevTool } from '@hookform/devtools';
 // import { useEffect } from 'react';
 
@@ -54,10 +54,20 @@ export default function YouTubeForm() {
     setValue,
   } = formDeal;
 
-  const { errors, isSubmitting, touchedFields, dirtyFields, isDirty } =
-    formState;
+  const {
+    errors,
+    isSubmitting,
+    touchedFields,
+    dirtyFields,
+    isDirty,
+    isValid,
+    isSubmitted,
+    isSubmitSuccessful,
+    submitCount,
+  } = formState;
 
-  console.log(touchedFields, dirtyFields, isDirty);
+  console.log(touchedFields, dirtyFields, isDirty, isValid);
+  console.log(isSubmitted, isSubmitSuccessful, submitCount);
 
   // isDirty helps to see is form full. fe: button can be disabled when form is not full
 
@@ -77,6 +87,10 @@ export default function YouTubeForm() {
         message: 'Age is not god',
       });
     }
+  }
+
+  function onError(errors: FieldErrors<FormValues>) {
+    console.log(`Form errors:`, errors);
   }
 
   function handleGetValues() {
@@ -108,7 +122,7 @@ export default function YouTubeForm() {
       <h1>YouTube Form {renderCount / 2}</h1>
       <h2>Watched value: {watchUserName}</h2>
 
-      <form onSubmit={handleSubmit(onSubmitFun)}>
+      <form onSubmit={handleSubmit(onSubmitFun, onError)} noValidate>
         <div className="form-control">
           <label htmlFor="username">Username</label>
           <input
@@ -261,7 +275,12 @@ export default function YouTubeForm() {
           <p className="error">{errors.dob?.message}</p>
         </div>
 
-        <button disabled={isSubmitting}>
+        <button
+          className={`${
+            !isDirty || isSubmitting || !isValid ? 'disabled' : ''
+          }`}
+          disabled={!isDirty || isSubmitting || !isValid}
+        >
           {isSubmitting ? 'Loading' : 'Submit'}
         </button>
 

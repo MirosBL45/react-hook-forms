@@ -34,3 +34,7 @@ input[type='date'] {
 .form-control {
   margin-bottom: 20px;
 }
+
+.disabled {
+  cursor: not-allowed;
+}
