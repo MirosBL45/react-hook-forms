@@ -1,6 +1,6 @@
 import { useForm, useFieldArray, FieldErrors } from 'react-hook-form';
 import { DevTool } from '@hookform/devtools';
-// import { useEffect } from 'react';
+import { useEffect } from 'react';
 
 let renderCount = 0;
 
@@ -52,6 +52,7 @@ export default function YouTubeForm() {
     watch,
     getValues,
     setValue,
+    reset,
   } = formDeal;
 
   const {
@@ -81,7 +82,7 @@ export default function YouTubeForm() {
       await new Promise((resolve) => setTimeout(resolve, 3000));
       // throw new Error();
       console.log('Form submitted', data);
-      formDeal.reset();
+      // formDeal.reset();
     } catch (error) {
       setError('age', {
         message: 'Age is not god',
@@ -104,6 +105,12 @@ export default function YouTubeForm() {
       shouldTouch: true,
     });
   }
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      formDeal.reset();
+    }
+  }, [isSubmitSuccessful, reset]);
 
   // useEffect(() => {
   //   const subscription = watch((value) => {
@@ -163,6 +170,13 @@ export default function YouTubeForm() {
                     !fieldValue.endsWith('baddomain.com') ||
                     'This domain is not supported'
                   );
+                },
+                emailAvailable: async (fieldValue) => {
+                  const res = await fetch(
+                    `https://jsonplaceholder.typicode.com/users?email=${fieldValue}`
+                  );
+                  const data = await res.json();
+                  return data.length == 0 || 'Email already exists';
                 },
               },
             })}
@@ -279,7 +293,8 @@ export default function YouTubeForm() {
           className={`${
             !isDirty || isSubmitting || !isValid ? 'disabled' : ''
           }`}
-          disabled={!isDirty || isSubmitting || !isValid}
+          disabled={!isDirty || isSubmitting}
+          // disabled={!isDirty || isSubmitting || !isValid}
         >
           {isSubmitting ? 'Loading' : 'Submit'}
         </button>
