@@ -41,6 +41,8 @@ export default function YouTubeForm() {
         dob: new Date(),
       };
     },
+    mode: 'onTouched',
+    // mode: 'onBlur',
   });
 
   const {
@@ -53,6 +55,7 @@ export default function YouTubeForm() {
     getValues,
     setValue,
     reset,
+    trigger,
   } = formDeal;
 
   const {
@@ -305,6 +308,11 @@ export default function YouTubeForm() {
 
         <button type="button" onClick={handleSetValue}>
           Set Value
+        </button>
+
+        <button type="button" onClick={() => trigger('dob')}>
+          {/* <button type="button" onClick={() => trigger()}> */}
+          Validate
         </button>
       </form>
       <DevTool control={control} />
